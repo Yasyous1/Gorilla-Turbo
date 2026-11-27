@@ -8,11 +8,11 @@ This repository preserves a sequence of experiments, not a single documented rel
 
 The latest tracked source is [`hell1/better_intersection`](../hell1/better_intersection). It extends the preceding motor-and-steering revision with checks intended to reject misleading line candidates at intersections. It contains no ultrasonic, finish-line or latched-stop implementation. Its status is **latest tracked experiment**, not a verified final release.
 
-The later project report, *Rapport de Projet Personnel et Professionnel — Conception et réalisation d’une voiture autonome intelligente* (`ppp.pdf`, academic year 2025–2026), describes a more complete car. Its bibliography explicitly names **`bensaid2.0.ino`** as the final source, consulted on 30 May 2026 (PDF p. 23, printed p. 16). That file is absent from the inspected repository and recovered source files. The report is supporting project evidence and is not distributed in this repository.
+The later project report, *Rapport de Projet Personnel et Professionnel — Conception et réalisation d’une voiture autonome intelligente* (`ppp.pdf`, academic year 2025–2026), describes a more complete car. Its bibliography cites the final firmware source, consulted on 30 May 2026 (PDF p. 23, printed p. 16). That source is absent from the inspected repository and recovered source files. The report is supporting project evidence and is not distributed in this repository.
 
 | Item | Latest tracked source | Later report |
 |---|---|---|
-| Identified source | `hell1/better_intersection` | `bensaid2.0.ino`, unavailable |
+| Identified source | `hell1/better_intersection` | Final firmware source, unavailable |
 | Steering center | 105° | 98° |
 | Steering limits | 40–150° | 40–150° |
 | PD gains | `KP=0.65`, `KD=0.15` | `KP=0.95`, `KD=0.25` |
@@ -81,7 +81,7 @@ The project report credits **Nesrine Ben Miled, Youssef Elloumi and Ilyess Biskr
 | Evidence | What it can establish | What it cannot establish alone |
 |---|---|---|
 | Tracked source at `81d8022` and Git history | Implemented branches, constants, dependencies, file relationships and account contributions | Which binary ran in a demonstration; physical wiring; measured reliability |
-| Project report `ppp.pdf`, cited above by physical PDF page | Reported later hardware, team credits, intended/final configuration and described tests | Contents of missing `bensaid2.0.ino`; independent measured results; individual subsystem ownership |
+| Project report `ppp.pdf`, cited above by physical PDF page | Reported later hardware, team credits, intended/final configuration and described tests | Implementation of the missing final firmware; independent measured results; individual subsystem ownership |
 | Dated user reports recovered during the 27 Nov 2026 review | Reported observations, including battery-related board failure and a later working demonstration | Electrical root cause without measurements; repeatability; exact source revision |
 | Photograph and 39.37-second track video supplied on 27 Nov 2026 | Visible prototype layout, track driving and a stop before a box near the end | Recording date, flashed firmware, motor PWM, measured speed/distance, sensor causation or a permanently latched stop |
 | Supplied `example-of-code-my-teammate-wrote.txt` | A “Day 1 Fixed Version” example and its attempted corrections | Final firmware, proven success or exclusive authorship |
@@ -98,6 +98,6 @@ Four recovered source files remain external reference material rather than new f
 | `Pasted code(2).cpp` | 98° | 0.95/0.20 | 200/170 |
 | `Pasted code(3).cpp` | 98° | 0.95/0.20 | 200/170 |
 
-The last two files are byte-identical. `Pasted code(1).cpp` additionally latches a slowdown to PWM 165–155 after a horizontal marker is detected; it does not latch a stop. The recovered filenames do not establish flashing dates or successful physical tests. These variants help explain the tuning history but do not recover the configuration or obstacle implementation described in `bensaid2.0.ino`.
+The last two files are byte-identical. `Pasted code(1).cpp` additionally latches a slowdown to PWM 165–155 after a horizontal marker is detected; it does not latch a stop. The recovered filenames do not establish flashing dates or successful physical tests. These variants help explain the tuning history but do not recover the configuration or obstacle implementation described in the report.
 
-Before marking a final release, recover `bensaid2.0.ino` or export the actual current sketch, record tool/library versions and camera settings, identify its hardware configuration, and associate a dated physical test with an exact commit. Use the [validation procedure](VALIDATION.md).
+Before marking a final release, recover or export the actual firmware running on the car, record tool/library versions and camera settings, identify its hardware configuration, and associate a dated physical test with an exact commit. Use the [validation procedure](VALIDATION.md).

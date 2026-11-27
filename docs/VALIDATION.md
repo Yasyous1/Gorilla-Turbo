@@ -28,7 +28,7 @@ These were actual Arduino/Teensy ARM compilation and linking runs. No stub libra
 | `servo_calibration` | PASS | No hardware calibration performed |
 | `day2` | PASS | After adding the missing plotting declaration and selecting it as a local include |
 
-**Result: 10 of 11 distinct prepared firmware variants compile and link.** The identical duplicate camera sketch is not counted twice. The empty placeholder is not a build target. The four external recovered snapshots and missing `bensaid2.0.ino` were not compiled as part of this matrix.
+**Result: 10 of 11 distinct prepared firmware variants compile and link.** The identical duplicate camera sketch is not counted twice. The empty placeholder is not a build target. The four external recovered snapshots and the missing final firmware were not compiled as part of this matrix.
 
 The reproducible command for the reference target is:
 
@@ -79,7 +79,7 @@ The original duplicate files, placeholders and old review notes are preserved an
 
 | Step | Procedure | Record / acceptance evidence |
 | --- | --- | --- |
-| 1. Identify the actual firmware | Recover `bensaid2.0.ino` or the exact source last flashed. Record its checksum/commit, toolchain and constants before changing anything. | A source-to-car link; no assumption based on filename or report alone. |
+| 1. Identify the actual firmware | Recover the exact source last flashed. Record its checksum/commit, toolchain and constants before changing anything. | A source-to-car link; no assumption based on filename or report alone. |
 | 2. Inspect power and pins | Disconnect propulsion. Check regulated voltages, grounds, VIN/USB arrangement and ultrasonic level conversion against [hardware notes](HARDWARE.md). | Measured idle/load voltages, wiring photo and component labels. |
 | 3. Check steering | With wheels lifted and propulsion disconnected, run calibration; verify center and correction direction again using the selected driving sketch. | Straight-wheel command, usable limits and steering response to left/right target shifts. |
 | 4. Check propulsion and sensing | Lift the wheels before enabling motors. Confirm A/B wheel sides and directions; inspect Pixy vectors and serial diagnostics for straight, curved and single-border samples. | Correct wheel direction and observed target/error/servo/PWM values. |

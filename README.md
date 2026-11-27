@@ -12,7 +12,7 @@ The project demonstrates embedded C++ development, camera-to-controller integrat
 
 **A prototype photograph and track demonstration are included; the exact demonstrated firmware is not yet identified.** The newest tracked source is [`hell1/better_intersection`](hell1/better_intersection), added on **7 April 2026** in commit [`81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5). It is the reference revision for the code explanation below, not a confirmed competition release.
 
-The later team report names a final file, **`bensaid2.0.ino`**, with integrated ultrasonic stopping. That file was not recovered during the repository review. Several intermediate sketches and later uploaded tuning snapshots exist; their features and calibration values must be kept distinct. [Firmware history and evidence](docs/FIRMWARE_HISTORY.md) records those differences.
+The later team report describes final firmware with integrated ultrasonic stopping. That source was not recovered during the repository review. Several intermediate sketches and later uploaded tuning snapshots exist; their features and calibration values must be kept distinct. [Firmware history and evidence](docs/FIRMWARE_HISTORY.md) records those differences.
 
 **Build verification, 27 November 2026:** 10 of 11 distinct variants compile and link for Teensy 4.1 using the documented dependency setup. The remaining archived camera/servo v3 sketch has an undeclared variable. No car was flashed or physically tested during this review.
 
@@ -129,7 +129,7 @@ The **39.37-second video duration is not a measured lap time**. There are no rec
 
 ## Known limitations and next improvements
 
-1. Recover `bensaid2.0.ino` and associate it with a dated demonstration before declaring a final release.
+1. Recover the final firmware and associate it with a dated demonstration before declaring a final release.
 2. Verify the installed wiring, steering center, supply behavior and camera settings, then commit a reproducible hardware record.
 3. Address camera-failure, prolonged line-loss and obstacle-stop behavior in a separately tested firmware change. Existing behavior was preserved in this review.
 4. Measure straight/curve tracking, crossing repeatability, loop timing and final stopping distance under recorded conditions.

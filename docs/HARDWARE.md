@@ -87,7 +87,7 @@ Manufacturer source: [Teensy 4.1, Digital Pins and Power](https://www.pjrc.com/s
 
 For the newest tracked source, keep the existing center **105°**, range **40–150°**, sign **+1**, PD gains **0.65/0.15**, filter factors **0.35/0.65**, motor commands **200/180** and loop gate **20 ms**. These values were preserved during the documentation work.
 
-The later report lists center 98°, PD 0.95/0.25 and an 8 ms gate for the missing `bensaid2.0.ino`. Those values must not be transplanted into an April sketch to manufacture a supposed final version. See [firmware history](FIRMWARE_HISTORY.md) for the differences and [build and operating instructions](BUILD_AND_RUN.md) for the calibration procedure.
+The later report lists center 98°, PD 0.95/0.25 and an 8 ms gate for the missing final firmware. Those values must not be transplanted into an April sketch to manufacture a supposed final version. See [firmware history](FIRMWARE_HISTORY.md) for the differences and [build and operating instructions](BUILD_AND_RUN.md) for the calibration procedure.
 
 ## Hardware information still needed
 

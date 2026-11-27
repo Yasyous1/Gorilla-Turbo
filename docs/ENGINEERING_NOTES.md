@@ -64,7 +64,7 @@ The comment implying a 12 cm threshold is inside a 10 cm target is incorrect. A 
 
 ### Later reported approach
 
-The report describes a 10 cm latched stop in the missing `bensaid2.0.ino` (`ppp.pdf`, PDF pp. 19–20, 24–26). This is **reported final behavior**, absent from the latest tracked source. Its pseudocode and unfilled checklist are insufficient to verify every branch or stopping distance. Recover the actual source before claiming that this repository reproduces that final behavior.
+The report describes a 10 cm latched stop in the final firmware (`ppp.pdf`, PDF pp. 19–20, 24–26). This is **reported final behavior**, absent from the latest tracked source. Its pseudocode and unfilled checklist are insufficient to verify every branch or stopping distance. Recover the actual source before claiming that this repository reproduces that final behavior.
 
 The supplied *NXP Cup 2025/2026 Rules*, version 1.0, July 2025 (`NXP-Cup-2026-Rules.pdf`, PDF pp. 9 and 12), specify slowdown after the final start/stop line and a stop within 10 cm without contact. The supplied teammate “Day 1 Fixed Version” example uses a 50 cm threshold and calls a five-second delay a rule requirement; no such five-second requirement was found in the supplied rules. That earlier example is not a compliance reference or final firmware.
 
