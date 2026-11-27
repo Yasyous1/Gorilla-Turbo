@@ -2,11 +2,11 @@
 
 [Back to README](../README.md) · [Hardware](HARDWARE.md) · [Verification results](VALIDATION.md)
 
-The repository uses Arduino C++ with PJRC's Teensy support. Each historical source is a separate program. The preparation scripts make those programs buildable without moving them or combining multiple `setup()` and `loop()` functions.
+Use the **`docs/portfolio-review-2026-11-27`** branch for this organized layout; `main` is unchanged. The repository uses Arduino C++ with PJRC's Teensy support. The development baseline is [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino); the calibration tool has its own sketch directory. Earlier experiments live under `archive/firmware/` and remain separate programs. The preparation scripts select one program and its companions without combining multiple `setup()` and `loop()` functions.
 
-## Verified tools and dependencies
+## Previously verified tools and dependencies
 
-The following combination was used for real Teensy 4.1 compilation on 27 November 2026. The original development tool versions were not recorded; this is a newly verified build environment, not a reconstruction of the team's original installation.
+The following combination was used for real Teensy 4.1 compilation during the earlier review on 27 November 2026. The original development tool versions were not recorded. These are recorded build inputs, not a reconstruction of the team's original installation or a fresh toolchain verification during the directory reorganization.
 
 | Component | Verified version / configuration |
 | --- | --- |
@@ -74,21 +74,34 @@ arduino-cli compile \
 
 The helper copies the selected source byte-for-byte to an Arduino-compatible directory/name and prints its SHA-256. For `.cpp` or extensionless standalone sources, the staged name has an `.ino` extension so Arduino supplies its normal sketch preprocessing. This is not a firmware conversion or a merge of variants.
 
-| Alias | Original source | Use |
+| Alias | Current source path | Use |
 | --- | --- | --- |
-| `intersection` | `hell1/better_intersection` | Latest tracked intersection experiment |
-| `motors` | `hell1/sketch_with_motors.cpp` | Preceding motor/steering integration |
-| `motors_apr05` | `helemwthakek.ino` | Earlier motor/steering tuning |
-| `camera_servo` | `code_cam_servo.ino` | Minimal camera/servo bench test |
-| `camera_servo_v3` | `code_cam_servov3.ino` | Archived incomplete experiment; known compile failure |
-| `servo_error` | `test erreur-servo/test-erreur_servo.ino` | Camera/servo diagnostics |
-| `servo_tuned` | `meilleur-test-servo.ino` | Alternative steering calculation |
-| `try2` | `TRY2.ino` | Earlier integrated obstacle/finish experiment |
-| `corrected` | `nxp_cup_corrected.ino` | Alternative motor pin/interface mapping |
-| `servo_calibration` | `day 2/servo_calibration.cpp` | Interactive steering calibration |
-| `day2` | `day 2/main_day2.cpp` | Earlier integrated angle-based controller |
+| `intersection` | `firmware/track_following/track_following.ino` | Latest tracked intersection experiment |
+| `motors` | `archive/firmware/hell1/sketch_with_motors.cpp` | Preceding motor/steering integration |
+| `motors_apr05` | `archive/firmware/helemwthakek.ino` | Earlier motor/steering tuning |
+| `camera_servo` | `archive/firmware/code_cam_servo.ino` | Minimal camera/servo bench test |
+| `camera_servo_v3` | `archive/firmware/code_cam_servov3.ino` | Archived incomplete experiment; known compile failure |
+| `servo_error` | `archive/firmware/test erreur-servo/test-erreur_servo.ino` | Camera/servo diagnostics |
+| `servo_tuned` | `archive/firmware/meilleur-test-servo.ino` | Alternative steering calculation |
+| `try2` | `archive/firmware/TRY2.ino` | Earlier integrated obstacle/finish experiment |
+| `corrected` | `archive/firmware/nxp_cup_corrected.ino` | Alternative motor pin/interface mapping |
+| `servo_calibration` | `firmware/calibration/servo_calibration/servo_calibration.ino` | Interactive steering calibration |
+| `day2` | `archive/firmware/day 2/main_day2.cpp` | Earlier integrated angle-based controller |
 
-For another alias, replace `intersection` in both preparation and compile paths. `day2` also stages its plotting header and implementation. The root camera sketch's identical duplicate is not a separate target. The empty root `better_intersection` is not the source used by the `intersection` alias.
+For another alias, replace `intersection` in both preparation and compile paths. `day2` also stages its plotting header and implementation. The archived duplicate camera sketch is not a separate target. The archived empty placeholder is not the source used by the `intersection` alias. See [the migration map](../archive/PATHS.json) for every previous source path.
+
+### Build the primary sketch directly
+
+The track-following entry point now has an Arduino-compatible folder and filename, so it can also be compiled directly after preparing the Pixy dependency:
+
+```bash
+arduino-cli compile \
+  --fqbn teensy:avr:teensy41 \
+  --library build/libraries/Pixy2 \
+  firmware/track_following
+```
+
+This direct command is the new layout's intended build path. No fresh Teensy compilation was performed during the reorganization; the earlier successful build used the identical source bytes through the `intersection` alias. Keep the alias workflow when comparing any archived variants.
 
 ### Working on a staged sketch
 
@@ -98,7 +111,7 @@ The scripts reuse identical generated files but refuse to overwrite edits or mix
 python3 scripts/prepare_sketch.py intersection --output-root build/review2
 ```
 
-Compile the resulting `build/review2/intersection` path. To make a firmware change permanent, deliberately apply the reviewed change to its original source on a development branch, then prepare a fresh directory. Record any calibration change in the associated hardware test.
+Compile the resulting `build/review2/intersection` path. To make a firmware change permanent, apply the reviewed change to the source listed in the alias table on a development branch, then prepare a fresh directory. Record any calibration change in the associated hardware test.
 
 ## Optional Arduino IDE workflow
 
@@ -111,7 +124,7 @@ Compile the resulting `build/review2/intersection` path. To make a firmware chan
    ```
 
 3. Select that sketchbook directory in IDE Preferences, retaining your previous setting for other projects. Reopen the IDE to discover the library.
-4. Open the prepared `.ino`, such as `build/intersection/intersection.ino`, and click **Verify**. Keep USB Type **Serial**, CPU **600 MHz** and optimization **Faster** to match the CLI verification.
+4. Open `firmware/track_following/track_following.ino` or a prepared `.ino`, such as `build/intersection/intersection.ino`, and click **Verify**. Keep USB Type **Serial**, CPU **600 MHz** and optimization **Faster** to match the recorded CLI verification.
 
 Use the CLI with the explicit `--library` path if you want to keep the IDE's current sketchbook configuration. There is no need to delete the original Pixy ZIP or another project's library.
 
@@ -140,7 +153,17 @@ On Linux, install the [PJRC udev rules](https://www.pjrc.com/teensy/td_download.
 4. **Verify the selected driving revision.** Newer sketches use `PWMServo` while the calibration utility uses `Servo`. Verify the mechanical center again with the chosen driving firmware. Move a track sample left/right under the camera and confirm the steering correction reduces the observed lane error. Establish center and direction before adjusting gains.
 5. **Record tuning systematically.** For a future tuning session, retain the original constants, change one parameter at a time on a separate revision, and log straight/curve behavior. Pixel-error gains cannot be copied directly from the older angle-error controller. The derivative is per-update; changing the loop interval changes its interpretation.
 
-No calibration, gain, pin or timing value was changed by the repository review. The report's 98° center is not substituted for the tracked reference's 105° center.
+No calibration, gain, pin or timing value was changed by the repository reorganization. The calibration utility's 84° start and 40–128° limits are its historical settings; the track-following baseline retains a 105° center and 40–150° limits. Neither those values nor the report's 98° center establish the correct mechanical center for the current car.
+
+## Host checks for the repository tools
+
+Run the preparation checks from the repository root:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+These tests stage all 11 aliases and compare source bytes, including the Day 2 companions. They also check explicit variant selection and refusal to overwrite edited, unexpected or symlinked output. They do not compile firmware, communicate with the board or measure driving behavior. See [validation](VALIDATION.md#repository-reorganization-checks) for the current result.
 
 ## 6. Operating checks
 
@@ -148,7 +171,7 @@ With the wheels raised, confirm channel A/B wheel direction, steering response a
 
 Covering the camera in this revision should reveal its existing behavior: the last steering command is held and PWM 180 continues. It is not a stop test. Do not expect ultrasonic protection or a start-button interlock from this revision.
 
-Only test end-of-track stopping after identifying an actual source with that feature and checking all its state transitions with the wheels raised. A saved 10/12/50 cm threshold or a report description does not establish the final physical stopping distance. Use [the short physical verification procedure](VALIDATION.md#physical-car-verification) and record the exact commit for any demonstration.
+Fastest-lap development comes first: log complete laps, failures, steering/filter changes and curve-speed trials against an exact source revision. Obstacle stopping is deferred. When that bonus is revisited, first identify an actual source with the feature and check all its state transitions with the wheels raised. A saved 10/12/50 cm threshold or a report description does not establish final physical stopping distance. Use [the short physical verification procedure](VALIDATION.md#physical-car-verification) and record the exact commit for any demonstration.
 
 ## Troubleshooting the build
 

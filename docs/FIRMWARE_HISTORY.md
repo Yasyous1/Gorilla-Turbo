@@ -2,17 +2,17 @@
 
 [Back to README](../README.md)
 
-This repository preserves a sequence of experiments, not a single documented release. The review baseline is commit [`81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5), dated **7 April 2026**. Existing source files, calibration values and historical notes are retained.
+This repository preserves a sequence of experiments, not a single documented release. The review baseline is commit [`81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5), dated **7 April 2026**. Existing source files, calibration values and historical notes are retained. The directory reorganization moves the driving baseline and calibration utility into `firmware/`, and other experiments into `archive/firmware/`, without changing their contents. The [migration map](../archive/PATHS.json) links every previous path to its current location.
 
 ## Latest tracked source versus reported final car
 
-The latest tracked source is [`hell1/better_intersection`](../hell1/better_intersection). It extends the preceding motor-and-steering revision with checks intended to reject misleading line candidates at intersections. It contains no ultrasonic, finish-line or latched-stop implementation. Its status is **latest tracked experiment**, not a verified final release.
+The latest tracked source is [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino). It extends the preceding motor-and-steering revision with checks intended to reject misleading line candidates at intersections. It contains no ultrasonic, finish-line or latched-stop implementation. Its status is **latest tracked experiment**, not a verified final release.
 
 The later project report, *Rapport de Projet Personnel et Professionnel — Conception et réalisation d’une voiture autonome intelligente* (`ppp.pdf`, academic year 2025–2026), describes a more complete car. Its bibliography cites the final firmware source, consulted on 30 May 2026 (PDF p. 23, printed p. 16). That source is absent from the inspected repository and recovered source files. The report is supporting project evidence and is not distributed in this repository.
 
 | Item | Latest tracked source | Later report |
 |---|---|---|
-| Identified source | `hell1/better_intersection` | Final firmware source, unavailable |
+| Identified source | `firmware/track_following/track_following.ino` | Final firmware source, unavailable |
 | Steering center | 105° | 98° |
 | Steering limits | 40–150° | 40–150° |
 | PD gains | `KP=0.65`, `KD=0.15` | `KP=0.95`, `KD=0.25` |
@@ -22,7 +22,7 @@ The later project report, *Rapport de Projet Personnel et Professionnel — Conc
 | Horizontal-line threshold | 20° | 35° |
 | Ultrasonic/finish behavior | Absent | Reported final-zone handling and latched stop at 10 cm |
 
-Sources: the constants and `loop()` in [latest tracked source](../hell1/better_intersection); report PDF pp. 15, 19–20 and 26, printed pp. 8, 12–13 and 19. These differences are not settings to copy into the tracked experiment. Restoring the final version requires the actual file and physical verification.
+Sources: the constants and `loop()` in [latest tracked source](../firmware/track_following/track_following.ino); report PDF pp. 15, 19–20 and 26, printed pp. 8, 12–13 and 19. These differences are not settings to copy into the tracked experiment. Restoring the final version requires the actual file and physical verification.
 
 Youssef reported a working car demonstration on **11 May 2026**, while describing an unsuccessful qualification outcome. A [prototype photograph](../assets/media/gorilla-turbo-prototype.jpg) and [track video](../assets/media/gorilla-turbo-track-demo.mp4) were subsequently supplied on **27 November 2026** and are included in this review branch. The video shows track driving and a visible stop before a white box near the end. Its recording date, relationship to the May demonstration and exact flashed source are unconfirmed; it does not establish a timed lap or measured stopping distance. See [media observations](VALIDATION.md#available-demonstrations-and-result-evidence).
 
@@ -32,20 +32,20 @@ Dates below are commit dates in Tunisia time. A filename containing “corrected
 
 | Source | Added | Purpose and distinguishing configuration |
 |---|---|---|
-| [`day 2/main_day2.cpp`](../day%202/main_day2.cpp) | 3 Apr | Integrated camera, steering, L298N and ultrasonic experiment. `Servo.h`; center 97°, limits 40–128°; angle-based PD 1.0/8.0; PWM 200–150; 12 cm stop threshold. Its missing plotting declaration is supplied by the repository cleanup. |
-| [`day 2/Serial_Plotting.cpp`](../day%202/Serial_Plotting.cpp) | 3 Apr | Serial plotting helper, not a standalone program. `sendData(char*, long)` preserves the original integer output semantics. |
-| [`TRY2.ino`](../TRY2.ino) | 3 Apr | Integrated pixel-based PD, motors, ultrasonic and horizontal-marker experiment. Center 98°, limits 40–140°; PD 0.35/0.18; alpha 0.25; PWM 150/140/125, lost-line 110, finish 105; 12 cm stop threshold. |
-| [`code_cam_servo.ino`](../code_cam_servo.ino) | 3 Apr | Minimal camera/steering test. Center 95°; PD 0.45/0.25; alpha 0.35; initial lane width 30 px. Recenters on missing vectors. No motor or obstacle control. |
-| [`nxp_cup_corrected.ino`](../nxp_cup_corrected.ino) | 3 Apr | Alternative motor interface: PWM pins 3/4 and direction pins 5/6. Center 95°; PD 0.45/0.25; PWM 200–100. This is not the six-pin L298N configuration used by later motor sketches. |
-| [`code_cam_servov3.ino`](../code_cam_servov3.ino) | 3 Apr | Camera/steering experiment with adaptive filtering. Center 95°; PD 0.45/0.25. Contains an undeclared optional `cameraServo` reference and two camera acquisitions per update. Preserved as an incomplete historical experiment. |
-| [`day 2/code_cam_servo.ino`](../day%202/code_cam_servo.ino) | 3 Apr | Byte-identical duplicate of root `code_cam_servo.ino`; preserved to keep the original history and paths. |
-| [`day 2/servo_calibration.cpp`](../day%202/servo_calibration.cpp) | 3 Apr | Standalone serial calibration using `Servo.h` on pin 19. Starts at 84° and accepts 40–128°. Disconnect motor power: the sketch does not actively configure or disable motor outputs. |
-| [`test erreur-servo/test-erreur_servo.ino`](../test%20erreur-servo/test-erreur_servo.ino) | 3 Apr | Revised camera/steering diagnostic. Removes the second camera read and camera-servo branch; adds near/far target diagnostics. Center 95°; PD 0.45/0.25; nominal 20 ms gate. |
-| [`meilleur-test-servo.ino`](../meilleur-test-servo.ino) | 3 Apr | More aggressive steering experiment. Center 95°; PD 0.95/0.35; camera offset 2 px; error = lateral error + 0.30 × heading error; correction limited to ±35°; alpha 0.50/0.80. No propulsion or ultrasonic code. |
-| [`helemwthakek.ino`](../helemwthakek.ino) | 5 Apr | L298N motor/steering integration. Center 97°; PD 0.95/0.15; PWM 180–160; single-border offset uses lane width ×0.65. No ultrasonic code. |
-| [`hell1/sketch_with_motors.cpp`](../hell1/sketch_with_motors.cpp) | 7 Apr | Retuned version of `helemwthakek.ino`: center 105°, `KP=0.65`, PWM 200–180 and lane-width factor 0.7. `KD=0.15` is unchanged. |
-| [`hell1/better_intersection`](../hell1/better_intersection) | 7 Apr | Latest tracked source. Adds primary-vector selection and pair plausibility checks to the preceding revision. Preserves its servo, gain, motor and loop settings. |
-| [`better_intersection`](../better_intersection), [`hell1/readme.md`](../hell1/readme.md) | 7 Apr | One-newline placeholders; neither contains a usable program or operating instructions. |
+| [`archive/firmware/day 2/main_day2.cpp`](../archive/firmware/day%202/main_day2.cpp) | 3 Apr | Integrated camera, steering, L298N and ultrasonic experiment. `Servo.h`; center 97°, limits 40–128°; angle-based PD 1.0/8.0; PWM 200–150; 12 cm stop threshold. Its missing plotting declaration is supplied by the repository cleanup. |
+| [`archive/firmware/day 2/Serial_Plotting.cpp`](../archive/firmware/day%202/Serial_Plotting.cpp) | 3 Apr | Serial plotting helper, not a standalone program. `sendData(char*, long)` preserves the original integer output semantics. |
+| [`archive/firmware/TRY2.ino`](../archive/firmware/TRY2.ino) | 3 Apr | Integrated pixel-based PD, motors, ultrasonic and horizontal-marker experiment. Center 98°, limits 40–140°; PD 0.35/0.18; alpha 0.25; PWM 150/140/125, lost-line 110, finish 105; 12 cm stop threshold. |
+| [`archive/firmware/code_cam_servo.ino`](../archive/firmware/code_cam_servo.ino) | 3 Apr | Minimal camera/steering test. Center 95°; PD 0.45/0.25; alpha 0.35; initial lane width 30 px. Recenters on missing vectors. No motor or obstacle control. |
+| [`archive/firmware/nxp_cup_corrected.ino`](../archive/firmware/nxp_cup_corrected.ino) | 3 Apr | Alternative motor interface: PWM pins 3/4 and direction pins 5/6. Center 95°; PD 0.45/0.25; PWM 200–100. This is not the six-pin L298N configuration used by later motor sketches. |
+| [`archive/firmware/code_cam_servov3.ino`](../archive/firmware/code_cam_servov3.ino) | 3 Apr | Camera/steering experiment with adaptive filtering. Center 95°; PD 0.45/0.25. Contains an undeclared optional `cameraServo` reference and two camera acquisitions per update. Preserved as an incomplete historical experiment. |
+| [`archive/firmware/day 2/code_cam_servo.ino`](../archive/firmware/day%202/code_cam_servo.ino) | 3 Apr | Byte-identical duplicate of `archive/firmware/code_cam_servo.ino`; both copies are retained for historical traceability. |
+| [`firmware/calibration/servo_calibration/servo_calibration.ino`](../firmware/calibration/servo_calibration/servo_calibration.ino) | 3 Apr | Standalone serial calibration using `Servo.h` on pin 19. Starts at 84° and accepts 40–128°. Disconnect motor power: the sketch does not actively configure or disable motor outputs. |
+| [`archive/firmware/test erreur-servo/test-erreur_servo.ino`](../archive/firmware/test%20erreur-servo/test-erreur_servo.ino) | 3 Apr | Revised camera/steering diagnostic. Removes the second camera read and camera-servo branch; adds near/far target diagnostics. Center 95°; PD 0.45/0.25; nominal 20 ms gate. |
+| [`archive/firmware/meilleur-test-servo.ino`](../archive/firmware/meilleur-test-servo.ino) | 3 Apr | More aggressive steering experiment. Center 95°; PD 0.95/0.35; camera offset 2 px; error = lateral error + 0.30 × heading error; correction limited to ±35°; alpha 0.50/0.80. No propulsion or ultrasonic code. |
+| [`archive/firmware/helemwthakek.ino`](../archive/firmware/helemwthakek.ino) | 5 Apr | L298N motor/steering integration. Center 97°; PD 0.95/0.15; PWM 180–160; single-border offset uses lane width ×0.65. No ultrasonic code. |
+| [`archive/firmware/hell1/sketch_with_motors.cpp`](../archive/firmware/hell1/sketch_with_motors.cpp) | 7 Apr | Retuned version of `archive/firmware/helemwthakek.ino`: center 105°, `KP=0.65`, PWM 200–180 and lane-width factor 0.7. `KD=0.15` is unchanged. |
+| [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino) | 7 Apr | Latest tracked source. Adds primary-vector selection and pair plausibility checks to the preceding revision. Preserves its servo, gain, motor and loop settings. |
+| [`archive/firmware/better_intersection`](../archive/firmware/better_intersection), [`archive/firmware/hell1/readme.md`](../archive/firmware/hell1/readme.md) | 7 Apr | One-newline placeholders; neither contains a usable program or operating instructions. |
 
 These programs must be built separately: several define their own `setup()`, `loop()` and globals. See [build and operation](BUILD_AND_RUN.md) for the isolated build workflow, and [engineering notes](ENGINEERING_NOTES.md) for the remaining limitations.
 
@@ -67,7 +67,7 @@ The following attribution identifies what each account contributed to this repos
 
 | Contribution supported by history | Evidence |
 |---|---|
-| Contributed `TRY2.ino` and the minimal camera/steering program | [`9652867`](https://github.com/Yasyous1/Gorilla-Turbo/commit/9652867e2f42ca7ab3717010fb119ee8b5612da9) |
+| Contributed `archive/firmware/TRY2.ino` and the minimal camera/steering program | [`9652867`](https://github.com/Yasyous1/Gorilla-Turbo/commit/9652867e2f42ca7ab3717010fb119ee8b5612da9) |
 | Added alternative motor integration and the camera/servo v3 experiment | [`8ced402`](https://github.com/Yasyous1/Gorilla-Turbo/commit/8ced40221bded977a7ba068cbcac0649b49faae5), [`a794261`](https://github.com/Yasyous1/Gorilla-Turbo/commit/a79426108385bbb642e45de86fc8b293497c2fa6) |
 | Added revised steering diagnostics, single-frame processing and a more aggressive steering variant | [`d3668e3`](https://github.com/Yasyous1/Gorilla-Turbo/commit/d3668e3f3811121e86949456506e4d9473893946), [`e96f1b7`](https://github.com/Yasyous1/Gorilla-Turbo/commit/e96f1b748641d4f43f180457c204726c23936a2b) |
 | Added the integrated L298N motor/steering source later extended by Youssef | [`b2b8161`](https://github.com/Yasyous1/Gorilla-Turbo/commit/b2b81614b2961b098cb07287c303d4ae5723c246) |
@@ -100,4 +100,4 @@ Four recovered source files remain external reference material rather than new f
 
 The last two files are byte-identical. `Pasted code(1).cpp` additionally latches a slowdown to PWM 165–155 after a horizontal marker is detected; it does not latch a stop. The recovered filenames do not establish flashing dates or successful physical tests. These variants help explain the tuning history but do not recover the configuration or obstacle implementation described in the report.
 
-Before marking a final release, recover or export the actual firmware running on the car, record tool/library versions and camera settings, identify its hardware configuration, and associate a dated physical test with an exact commit. Use the [validation procedure](VALIDATION.md).
+The immediate priority is the fastest reliable lap; stopping recovery is deferred. Before marking a final release, recover or export the actual firmware running on the car, record tool/library versions and camera settings, identify its hardware configuration, and associate a dated physical test with an exact commit. Use the [validation procedure](VALIDATION.md).

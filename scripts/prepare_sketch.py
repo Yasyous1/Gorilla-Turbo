@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage one historical firmware variant as an isolated Arduino sketch."""
+"""Stage one selected firmware variant as an isolated Arduino sketch."""
 
 import argparse
 import hashlib
@@ -9,64 +9,67 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# The source paths are kept intact so that existing links and history still work.
-# .cpp and extensionless standalone programs are staged as .ino for Arduino's
-# normal include/prototype generation. No source text is rewritten.
+# Public aliases and generated sketch names remain stable after organization.
+# Current firmware and calibration live under firmware/; historical experiments
+# keep their original filenames under archive/firmware/. No source text is rewritten.
 VARIANTS = {
     "intersection": (
-        "hell1/better_intersection",
+        "firmware/track_following/track_following.ino",
         "Latest tracked intersection experiment; hardware validation pending",
         (),
     ),
     "motors": (
-        "hell1/sketch_with_motors.cpp",
+        "archive/firmware/hell1/sketch_with_motors.cpp",
         "April 7 camera, steering and L298N motor integration",
         (),
     ),
     "motors_apr05": (
-        "helemwthakek.ino",
+        "archive/firmware/helemwthakek.ino",
         "April 5 camera, steering and L298N motor integration",
         (),
     ),
     "camera_servo": (
-        "code_cam_servo.ino",
+        "archive/firmware/code_cam_servo.ino",
         "Camera and steering bench experiment; no motor control",
         (),
     ),
     "camera_servo_v3": (
-        "code_cam_servov3.ino",
+        "archive/firmware/code_cam_servov3.ino",
         "Archived camera/servo experiment; undeclared cameraServo blocks build",
         (),
     ),
     "servo_error": (
-        "test erreur-servo/test-erreur_servo.ino",
+        "archive/firmware/test erreur-servo/test-erreur_servo.ino",
         "Camera/steering experiment with adaptive filtering",
         (),
     ),
     "servo_tuned": (
-        "meilleur-test-servo.ino",
+        "archive/firmware/meilleur-test-servo.ino",
         "Camera/steering experiment with heading and camera-offset terms",
         (),
     ),
     "try2": (
-        "TRY2.ino",
+        "archive/firmware/TRY2.ino",
         "Earlier motor, ultrasonic and finish-line state-machine experiment",
         (),
     ),
     "corrected": (
-        "nxp_cup_corrected.ino",
+        "archive/firmware/nxp_cup_corrected.ino",
         "Earlier motor variant with a different pin mapping",
         (),
     ),
     "servo_calibration": (
-        "day 2/servo_calibration.cpp",
+        "firmware/calibration/servo_calibration/servo_calibration.ino",
         "Standalone serial-controlled steering calibration utility",
         (),
     ),
     "day2": (
-        "day 2/main_day2.cpp",
+        "archive/firmware/day 2/main_day2.cpp",
         "Earlier angle-based control and ultrasonic experiment",
-        ("day 2/Serial_Plotting.cpp", "day 2/Serial_Plotting.h"),
+        (
+            "archive/firmware/day 2/Serial_Plotting.cpp",
+            "archive/firmware/day 2/Serial_Plotting.h",
+        ),
     ),
 }
 

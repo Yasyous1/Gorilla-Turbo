@@ -6,13 +6,13 @@
 
 Review date: **27 November 2026**. Original repository baseline: [`81d802210365757ba847fa165d7b237d982bb0b5`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5). Local work branch: **`docs/portfolio-review-2026-11-27`**.
 
-The repository was freshly cloned into the review workspace and was clean before changes. This does not inspect uncommitted work on the owner's laptop. No existing local edits were overwritten. No files were deleted or moved, no project license was added or changed, and no upload, push or publication was performed.
+This document separates the earlier firmware/build review from the later repository reorganization. The earlier review used a fresh, initially clean clone and did not inspect uncommitted work on the owner's laptop. No existing local edits were overwritten and no project license was added or changed. The source moves and current repository checks are recorded separately below.
 
 The review inspected all 18 original tracked files, all 19 original commits, the supplied competition rules and teammate example, the later project report and four recovered source snapshots. There was no repository `AGENTS.md`, build configuration, dependency lockfile, CI, recorded test suite, tag/release or media asset at the baseline.
 
-## Real firmware builds
+## Recorded firmware builds from the earlier review
 
-These were actual Arduino/Teensy ARM compilation and linking runs. No stub libraries or host-only syntax substitutes were used. The environment was Linux x86_64 with Arduino CLI **1.5.1**, PJRC **1.62.0**, ARM GCC **15.2.1**, and the unchanged camera headers from the checksum-pinned Pixy2 Arduino **1.0.3** archive. Target: **`teensy:avr:teensy41`**, default USB Serial / 600 MHz / Faster settings.
+The following are recorded results from the earlier review, not new builds performed during the directory reorganization. These were actual Arduino/Teensy ARM compilation and linking runs. No stub libraries or host-only syntax substitutes were used. The environment was Linux x86_64 with Arduino CLI **1.5.1**, PJRC **1.62.0**, ARM GCC **15.2.1**, and the unchanged camera headers from the checksum-pinned Pixy2 Arduino **1.0.3** archive. Target: **`teensy:avr:teensy41`**, default USB Serial / 600 MHz / Faster settings.
 
 | Prepared alias | Result | Qualification |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ These were actual Arduino/Teensy ARM compilation and linking runs. No stub libra
 | `servo_calibration` | PASS | No hardware calibration performed |
 | `day2` | PASS | After adding the missing plotting declaration and selecting it as a local include |
 
-**Result: 10 of 11 distinct prepared firmware variants compile and link.** The identical duplicate camera sketch is not counted twice. The empty placeholder is not a build target. The four external recovered snapshots and the missing final firmware were not compiled as part of this matrix.
+**Recorded result: 10 of 11 distinct prepared firmware variants compiled and linked.** The identical duplicate camera sketch is not counted twice. The empty placeholder is not a build target. The four external recovered snapshots and the missing final firmware were not compiled as part of this matrix.
 
 The reproducible command for the reference target is:
 
@@ -61,9 +61,9 @@ RAM2: variables 12,416 bytes
 
 These are compiler memory figures, not a runtime timing measurement or a driving-performance result.
 
-## Preservation and repository checks
+## Preservation and checks from the earlier review
 
-- Compared the original firmware/helper sources against the baseline: **12 of 13 are byte-identical**. The sole change in the remaining file is `#include <Serial_Plotting.h>` becoming `#include "Serial_Plotting.h"` in `day 2/main_day2.cpp`.
+- Compared the original firmware/helper sources against the baseline: **12 of 13 are byte-identical**. The sole change in the remaining file is `#include <Serial_Plotting.h>` becoming `#include "Serial_Plotting.h"` in `archive/firmware/day 2/main_day2.cpp`.
 - Added a matching declaration header; no original runtime statement, pin, calibration value, control gain, timing constant or motor behavior changed.
 - Checked prepared sources against their originals, including the plotting companions. All prepared copies match.
 - Checked all five prepared Pixy headers against the official archive. Their content and notices match exactly; the archive checksum is unchanged.
@@ -72,6 +72,25 @@ These are compiler memory figures, not a runtime timing measurement or a driving
 - After the initial review, added the supplied photograph and video without modifying their bytes, verified their SHA-256 hashes against the uploads, checked their image/video metadata and decoded the complete MP4 with FFmpeg without errors. This media update changes no firmware or build inputs, so it does not require repeating the unchanged compile matrix.
 
 The original duplicate files, placeholders and old review notes are preserved and explained in [firmware history](FIRMWARE_HISTORY.md).
+
+## Repository reorganization checks
+
+The reorganization starts from commit `17a4c26395c94cd52ea3b73fd5196aea6f0ded3b`. It gives the existing track-following program and calibration utility their own Arduino sketch directories, moves other historical material under `archive/firmware/`, and updates the preparation aliases and documentation. The [path map](../archive/PATHS.json) records all 18 moved source/note files.
+
+Checks completed for this layout:
+
+- All **18 moved files** were compared with their contents at the starting commit and are byte-identical; the path map records their SHA-256 hashes.
+- The original prototype photo and video remain byte-identical.
+- **Six host tests passed**, including byte-for-byte staging of all 11 existing aliases and the Day 2 companions, alias listing, explicit variant selection, and refusal to overwrite edited, unexpected or symlinked generated output.
+- All **174 local Markdown links** resolve, and `git diff --check` passes.
+
+Run the host checks with:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+These are repository/preparation checks, not firmware algorithm tests. Arduino CLI is unavailable in the current environment, so **no fresh Teensy compilation, firmware upload or physical-car test was performed** during this reorganization. The earlier 10/11 compiler matrix remains a separate historical result. Pin assignments, gains, calibration, timing, runtime statements and team/dependency credits are preserved.
 
 ## Physical car verification
 
@@ -85,7 +104,7 @@ The original duplicate files, placeholders and old review notes are preserved an
 | 4. Check propulsion and sensing | Lift the wheels before enabling motors. Confirm A/B wheel sides and directions; inspect Pixy vectors and serial diagnostics for straight, curved and single-border samples. | Correct wheel direction and observed target/error/servo/PWM values. |
 | 5. Exercise missing data | While still lifted, remove lines and disconnect/disable camera communication in a controlled test. | For the current reference, document the existing continued-PWM behavior. Do not mark it as a safe stop. |
 | 6. Test controlled track runs | After bench checks, use a clear test area with immediate power-disconnection access. Record each exact firmware/configuration, lighting, track geometry and battery condition. | Straight and left/right curve performance; repeatable crossings; lap completion/time only if actually measured. |
-| 7. Verify stopping on the recovered final version | First check state transitions with wheels raised. Then measure sensor-to-box and bumper-to-box distances during controlled approach tests, including no-echo and lost-line conditions. | Final slowdown, no contact, measured stopping distance, persistent stop until the intended reset, and behavior on every failure path. This feature is absent from `intersection`. |
+| 7. Deferred bonus: verify stopping on an identified source | First check state transitions with wheels raised. Then measure sensor-to-box and bumper-to-box distances during controlled approach tests, including no-echo and lost-line conditions. | Final slowdown, no contact, measured stopping distance, persistent stop until the intended reset, and behavior on every failure path. This feature is absent from `intersection`. |
 
 Do not use a fixed PWM command as a speed measurement. Do not report the 20 ms scheduling gate as measured execution time. If measuring either, record the method and raw observations.
 
@@ -125,4 +144,4 @@ gorilla-turbo-track-demo.mp4
 SHA-256: c3add4c19817ea31a463339cdc4efca8109686d3accbac94527be602fdd52acd
 ```
 
-The next portfolio evidence should identify the source used in this video and add an annotated wiring record and measured track/stop tests. Do not label the April 7 reference as the demonstrated firmware until that link is established.
+The next lap-performance evidence should identify the source used in a recorded run and add an annotated wiring record, complete-lap outcomes and measured lap times. Stopping measurements are deferred with the bonus feature. Do not label the April 7 reference as the demonstrated firmware until that link is established.

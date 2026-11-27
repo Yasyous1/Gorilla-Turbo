@@ -14,7 +14,7 @@ These notes separate observations, source-level findings and reported outcomes. 
 
 ## 2. Steering center and direction changed across experiments
 
-**Symptom and evidence.** The source history contains several steering centers: 84° in the [calibration sketch](../day%202/servo_calibration.cpp), 97° in [Day 2](../day%202/main_day2.cpp), 95° in several camera tests, 98° in [TRY2](../TRY2.ino), and 105° in [the latest motor revision](../hell1/better_intersection). The existing [servo review](../test%20erreur-servo/Read%20me.md) explicitly asks for physical confirmation of both center and steering sign. The later report describes steering oscillations as a project difficulty (`ppp.pdf`, PDF p. 20).
+**Symptom and evidence.** The source history contains several steering centers: 84° in the [calibration sketch](../firmware/calibration/servo_calibration/servo_calibration.ino), 97° in [Day 2](../archive/firmware/day%202/main_day2.cpp), 95° in several camera tests, 98° in [TRY2](../archive/firmware/TRY2.ino), and 105° in [the latest motor revision](../firmware/track_following/track_following.ino). The existing [servo review](../archive/firmware/test%20erreur-servo/Read%20me.md) explicitly asks for physical confirmation of both center and steering sign. The later report describes steering oscillations as a project difficulty (`ppp.pdf`, PDF p. 20).
 
 **Established cause versus possible causes.** A center offset or reversed correction sign can make a correctly calculated error produce the wrong mechanical response. The available evidence does not establish which mechanism caused every reported steering problem. Different revision constants are evidence of experimentation, not proof that one universal center is correct.
 
@@ -24,25 +24,25 @@ These notes separate observations, source-level findings and reported outcomes. 
 
 ## 3. A loop checked one camera acquisition and processed another
 
-**Evidence and established cause.** In [`code_cam_servov3.ino`](../code_cam_servov3.ino), `loop()` obtains features, then `computeTargetX()` calls `filterLines()`, which obtains features again. The validity check and lane calculation can therefore refer to different acquisitions. The same file also refers to an undeclared `cameraServo`; setting the runtime boolean `USE_CAMERA_SERVO` to false does not make that identifier valid C++.
+**Evidence and established cause.** In [`archive/firmware/code_cam_servov3.ino`](../archive/firmware/code_cam_servov3.ino), `loop()` obtains features, then `computeTargetX()` calls `filterLines()`, which obtains features again. The validity check and lane calculation can therefore refer to different acquisitions. The same file also refers to an undeclared `cameraServo`; setting the runtime boolean `USE_CAMERA_SERVO` to false does not make that identifier valid C++.
 
-**What changed.** The later [`test-erreur_servo.ino`](../test%20erreur-servo/test-erreur_servo.ino), contributed in [commit `d3668e3`](https://github.com/Yasyous1/Gorilla-Turbo/commit/d3668e3f3811121e86949456506e4d9473893946), removes the camera-servo branch and leaves one camera acquisition in `loop()`. Filtering uses that acquired frame. The subsequent motor and intersection revisions retain this structure.
+**What changed.** The later [`test-erreur_servo.ino`](../archive/firmware/test%20erreur-servo/test-erreur_servo.ino), contributed in [commit `d3668e3`](https://github.com/Yasyous1/Gorilla-Turbo/commit/d3668e3f3811121e86949456506e4d9473893946), removes the camera-servo branch and leaves one camera acquisition in `loop()`. Filtering uses that acquired frame. The subsequent motor and intersection revisions retain this structure.
 
 **Outcome and lesson.** The single-acquisition change is demonstrable from source. No available log isolates its effect on lap performance. Acquire once, validate that result and use the same frame throughout a control update. Preserve the incomplete v3 file as history rather than silently treating it as a working release.
 
 ## 4. Crossings and partial lines made lane selection ambiguous
 
-**Symptom and evidence.** The existing [Day 2 review](../day%202/read.md) identifies vector-to-lane association as a weakness around intersections, extra markings, occlusion and short segments. Earlier sketches select a candidate by proximity to image center or vector length. Those rules can choose unrelated markings; this is a limitation of the algorithm, not evidence that every crossing failed.
+**Symptom and evidence.** The existing [Day 2 review](../archive/firmware/day%202/read.md) identifies vector-to-lane association as a weakness around intersections, extra markings, occlusion and short segments. Earlier sketches select a candidate by proximity to image center or vector length. Those rules can choose unrelated markings; this is a limitation of the algorithm, not evidence that every crossing failed.
 
 **What was tried.** The team normalized vector endpoints, filtered orientation, separated left/right candidates and remembered lane width for single-border tracking. The later motor code weights the estimated target toward the upper/lookahead point: **0.35 × near center + 0.65 × far center**. In [commit `81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5), Youssef added selection of vectors reaching farther down the image and checks on pair width, width continuity, relative length and endpoint-height consistency.
 
-**Implemented response.** [`hell1/better_intersection`](../hell1/better_intersection) accepts a coherent pair, falls back to a more plausible single border, or requests an image-center target when neither candidate is preferred. This is a geometric heuristic; it does not use explicit intersection data to plan a route. Requesting a centered target also does not instantly straighten the wheels because filtering and the previous PD state remain active.
+**Implemented response.** [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino) accepts a coherent pair, falls back to a more plausible single border, or requests an image-center target when neither candidate is preferred. This is a geometric heuristic; it does not use explicit intersection data to plan a route. Requesting a centered target also does not instantly straighten the wheels because filtering and the previous PD state remain active.
 
 **Outcome and lesson.** The algorithmic changes are implemented. There is no committed crossing-success count, comparative dataset or repeatable before/after track result. Evaluate perception independently of steering gains, and include both left/right single-border cases and ambiguous crossings in physical tests. Camera height, pitch and lighting also require recording; the report identifies sensitivity to these factors (`ppp.pdf`, PDF pp. 13 and 20).
 
 ## 5. Holding the last steering angle does not stop a lost car
 
-**Evidence.** [`code_cam_servo.ino`](../code_cam_servo.ino) recenters on missing vectors. Later camera/servo revisions keep the previous command. The [latest tracked motor source](../hell1/better_intersection), in both its no-vector and no-valid-line branches, holds `lastSteerAngle` and commands `MOTOR_SPEED_MIN=180`.
+**Evidence.** [`archive/firmware/code_cam_servo.ino`](../archive/firmware/code_cam_servo.ino) recenters on missing vectors. Later camera/servo revisions keep the previous command. The [latest tracked motor source](../firmware/track_following/track_following.ino), in both its no-vector and no-valid-line branches, holds `lastSteerAngle` and commands `MOTOR_SPEED_MIN=180`.
 
 **What this achieves and leaves unresolved.** Retaining the last command avoids an immediate steering reset during a brief visual interruption. It also means the car keeps moving indefinitely if a line never returns or a camera error persists. The code has no time-based lost-line stop, explicit camera-fault state or manual arming state; propulsion begins after setup. The benefit during short interruptions and the recovery duration have not been measured in the available evidence.
 
@@ -52,13 +52,13 @@ These notes separate observations, source-level findings and reported outcomes. 
 
 ### TRY2: no-vector handling bypasses the stop check
 
-[`TRY2.ino`](../TRY2.ino) reads distance, then returns early on missing camera vectors after commanding lost-line PWM 110 or finish-approach PWM 105. Its obstacle-stop checks occur later, so they are skipped on that branch. In frames with vectors, it stops at a configured threshold of 12 cm, but the stop is not latched: a later larger or missing-echo reading can allow motion again. A missing echo is represented as 999 cm, and `pulseIn(..., 30000)` can block the loop.
+[`archive/firmware/TRY2.ino`](../archive/firmware/TRY2.ino) reads distance, then returns early on missing camera vectors after commanding lost-line PWM 110 or finish-approach PWM 105. Its obstacle-stop checks occur later, so they are skipped on that branch. In frames with vectors, it stops at a configured threshold of 12 cm, but the stop is not latched: a later larger or missing-echo reading can allow motion again. A missing echo is represented as 999 cm, and `pulseIn(..., 30000)` can block the loop.
 
 These are source-level findings. There is no corresponding physical failure log. They are reasons not to promote this archive sketch as a verified final obstacle controller.
 
 ### Day 2: “non-blocking” and distance comments overstate the implementation
 
-[`day 2/main_day2.cpp`](../day%202/main_day2.cpp) labels ultrasonic acquisition non-blocking, but calls `pulseIn(..., 6000)`. It triggers on one loop call and reads on a later call, with other work between them; the available code does not prove that every echo is captured. A timeout retains the previous range. Finish-line detection runs only every ten seconds and examines features from the preceding acquisition. Once its finish-state obstacle threshold is reached, it does latch the stop in an infinite loop. Ordinary obstacle stopping is not latched.
+[`archive/firmware/day 2/main_day2.cpp`](../archive/firmware/day%202/main_day2.cpp) labels ultrasonic acquisition non-blocking, but calls `pulseIn(..., 6000)`. It triggers on one loop call and reads on a later call, with other work between them; the available code does not prove that every echo is captured. A timeout retains the previous range. Finish-line detection runs only every ten seconds and examines features from the preceding acquisition. Once its finish-state obstacle threshold is reached, it does latch the stop in an infinite loop. Ordinary obstacle stopping is not latched.
 
 The comment implying a 12 cm threshold is inside a 10 cm target is incorrect. A software threshold, sensor mounting offset and measured final bumper-to-obstacle distance are different quantities.
 
@@ -72,9 +72,9 @@ The supplied *NXP Cup 2025/2026 Rules*, version 1.0, July 2025 (`NXP-Cup-2026-Ru
 
 ## 7. File layout obscured which program to build
 
-**Evidence.** The original root contains several unrelated `.ino` entry points. The `day 2` directory mixes a main car program, a camera/servo program, a calibration program and a helper. The newest source has no extension. `main_day2.cpp` includes `Serial_Plotting.h`, which was absent, while the matching implementation already existed. Several files use different motor interfaces and calibration values; they are not interchangeable modules.
+**Evidence.** Before the reorganization, the root contained several unrelated `.ino` entry points, the Day 2 directory mixed several programs and a helper, and the newest source had no extension. `main_day2.cpp` includes `Serial_Plotting.h`, which was absent, while the matching implementation already existed. Several files use different motor interfaces and calibration values; they are not interchangeable modules.
 
-**Response in this cleanup.** The build workflow stages a selected program in its own Arduino sketch directory, keeps the original source paths and avoids combining entry points. A declaration header supplies the existing plotting interface without changing its integer formatting. Historical duplicates and incomplete experiments remain visible in the [inventory](FIRMWARE_HISTORY.md). Build results and any exclusions are recorded in [validation](VALIDATION.md).
+**Response.** The primary program now lives in `firmware/track_following/`, calibration has its own sketch directory, and older experiments and notes live under `archive/firmware/`. Their contents are preserved and previous paths are recorded in the [migration map](../archive/PATHS.json). The build helper still stages one selected program and avoids combining entry points. The previously added declaration header supplies the existing plotting interface without changing its integer formatting. Historical duplicates and incomplete experiments remain visible in the [inventory](FIRMWARE_HISTORY.md). [Validation](VALIDATION.md) separates the earlier compiler results from the reorganization checks.
 
 **Lesson.** Name the exact source revision and dependencies in every hardware test. Preserve experiments for traceability, but make the intended build target explicit. A filename or successful compilation does not identify the firmware used in a previous demonstration.
 

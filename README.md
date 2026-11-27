@@ -10,11 +10,13 @@ The project demonstrates embedded C++ development, camera-to-controller integrat
 
 ## Current status
 
-**A prototype photograph and track demonstration are included; the exact demonstrated firmware is not yet identified.** The newest tracked source is [`hell1/better_intersection`](hell1/better_intersection), added on **7 April 2026** in commit [`81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5). It is the reference revision for the code explanation below, not a confirmed competition release.
+**Priority: the fastest reliable lap through better track following, steering and curve-speed tuning. Obstacle stopping is a deferred bonus.** The repository now separates the track-following baseline, calibration utility and historical experiments. See the [architecture](docs/ARCHITECTURE.md) and [prioritized roadmap](docs/ROADMAP.md) for what exists and what is missing.
+
+**A prototype photograph and track demonstration are included; the exact demonstrated firmware is not yet identified.** Start with [`firmware/track_following/track_following.ino`](firmware/track_following/track_following.ino). Its implementation comes from the source added on **7 April 2026** in commit [`81d8022`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5); the repository reorganization preserves its bytes and settings. It is a development baseline, not a confirmed competition release or the proven source of the video.
 
 The later team report describes final firmware with integrated ultrasonic stopping. That source was not recovered during the repository review. Several intermediate sketches and later uploaded tuning snapshots exist; their features and calibration values must be kept distinct. [Firmware history and evidence](docs/FIRMWARE_HISTORY.md) records those differences.
 
-**Build verification, 27 November 2026:** 10 of 11 distinct variants compile and link for Teensy 4.1 using the documented dependency setup. The remaining archived camera/servo v3 sketch has an undeclared variable. No car was flashed or physically tested during this review.
+**Recorded build verification, 27 November 2026:** the earlier review compiled and linked 10 of 11 distinct variants for Teensy 4.1 using the documented dependency setup. The remaining archived camera/servo v3 sketch has an undeclared variable. The reorganization does not claim a new firmware build or physical-car test. See [validation](docs/VALIDATION.md) for the separate records.
 
 | Capability | Newest tracked revision | Other evidence |
 | --- | --- | --- |
@@ -23,7 +25,7 @@ The later team report describes final firmware with integrated ultrasonic stoppi
 | Filtered PD steering with limits and deadband | Implemented | Gains and center vary between revisions |
 | L298N motor control and slower turns | Implemented | Open-loop PWM; no measured wheel-speed feedback |
 | Intersection handling | Implemented as line-selection heuristics | No repeatable crossing results recorded |
-| Finish-marker and ultrasonic stopping | **Not implemented in this revision** | Earlier experiments contain partial handling; the report describes a latched stop in the missing final file. The supplied video shows a stop before a box, without identifying its software or trigger. |
+| Finish-marker and ultrasonic stopping | **Not implemented in this revision; deferred bonus** | Earlier experiments contain partial handling; the report describes a latched stop in the missing final firmware. The supplied video shows a stop before a box, without identifying its software or trigger. |
 | ML, odometry, SLAM or route planning | Not implemented | No claims of these capabilities are made |
 
 **Operating behavior to know:** the newest motor firmware starts propulsion automatically after initialization. If camera vectors disappear, it keeps the last steering angle and drives at PWM 180. It has no obstacle stop or timed lost-line stop. Begin verification with motor power disconnected and the wheels lifted. See the [hardware verification procedure](docs/VALIDATION.md#physical-car-verification).
@@ -72,12 +74,12 @@ Reference settings are **center 105°**, limits **40–150°**, `KP=0.65`, `KD=0
 
 ## Build and use
 
-The project retains **Arduino/Teensy**, using the PJRC board package and the Pixy2 Arduino library. `Servo`, `PWMServo` and `SPI` are supplied by the Teensy package. Python 3 is used only to prepare a standalone sketch on the development computer.
+The organized layout is published on **`docs/portfolio-review-2026-11-27`**; `main` is unchanged. The project retains **Arduino/Teensy**, using the PJRC board package and the Pixy2 Arduino library. `Servo`, `PWMServo` and `SPI` are supplied by the Teensy package. Python 3 is used only to prepare a standalone sketch on the development computer.
 
-The legacy sources are separate programs: opening the repository root as one Arduino sketch would combine multiple `setup()` and `loop()` functions. Select exactly one revision:
+The track-following sketch has its own Arduino directory. Historical sources remain separate programs under `archive/firmware/`; select exactly one revision with the preparation helper:
 
 ```bash
-git clone https://github.com/Yasyous1/Gorilla-Turbo.git
+git clone --branch docs/portfolio-review-2026-11-27 https://github.com/Yasyous1/Gorilla-Turbo.git
 cd Gorilla-Turbo
 python3 scripts/prepare_sketch.py --list
 python3 scripts/prepare_sketch.py intersection
@@ -91,22 +93,32 @@ The setup guide also covers USB upload, PixyMon configuration, serial diagnostic
 
 ## Repository map
 
-| Location | Purpose |
-| --- | --- |
-| [`hell1/better_intersection`](hell1/better_intersection) | Latest tracked motor/steering revision, with intersection heuristics |
-| [`hell1/sketch_with_motors.cpp`](hell1/sketch_with_motors.cpp) | Preceding motor/steering revision |
-| [`day 2/`](day%202/) | Earlier integrated experiment, plotting helper and servo calibration |
-| Root `.ino` files and [`test erreur-servo/`](test%20erreur-servo/) | Historical camera, steering and motor experiments |
-| [`assets/media/`](assets/media/) | Supplied prototype photograph and original track-demonstration video |
-| [`scripts/prepare_sketch.py`](scripts/prepare_sketch.py) | Selects and stages one build target without moving the source |
-| [`scripts/prepare_pixy2.py`](scripts/prepare_pixy2.py) | Prepares unchanged Pixy camera headers for the Teensy build |
-| [`docs/BUILD_AND_RUN.md`](docs/BUILD_AND_RUN.md) | Tools, dependency versions, build, upload and calibration |
-| [`docs/HARDWARE.md`](docs/HARDWARE.md) | Pin assignments, power requirements and unresolved wiring details |
-| [`docs/FIRMWARE_HISTORY.md`](docs/FIRMWARE_HISTORY.md) | Revision inventory, source evidence and contribution history |
-| [`docs/ENGINEERING_NOTES.md`](docs/ENGINEERING_NOTES.md) | Difficulties, attempted solutions, supported outcomes and lessons |
-| [`docs/VALIDATION.md`](docs/VALIDATION.md) | Checks performed, build results and physical verification procedure |
+```text
+Gorilla-Turbo/
+├── firmware/
+│   ├── track_following/track_following.ino
+│   └── calibration/servo_calibration/servo_calibration.ino
+├── archive/firmware/        Historical experiments and notes
+├── hardware/               Component inventory and missing hardware records
+├── docs/                   Architecture, build guide, evidence and roadmap
+├── assets/media/           Original prototype photo and track video
+├── scripts/                Sketch and Pixy dependency preparation
+└── tests/                  Host checks for sketch preparation
+```
 
-Original filenames and experiments are retained to preserve history. The duplicate camera sketch and empty placeholders are identified in the history document; they are not alternative final releases. The descriptive build aliases provide clearer entry points.
+| Start here | Purpose |
+| --- | --- |
+| [`firmware/README.md`](firmware/README.md) | Track-following and calibration entry points, with their status and different settings |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Current code flow, directory responsibilities and future module boundaries |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Available material, missing evidence and fastest-lap priorities |
+| [`hardware/README.md`](hardware/README.md) · [`docs/HARDWARE.md`](docs/HARDWARE.md) | Populated component inventory, source-defined pins and hardware details still needed |
+| [`archive/README.md`](archive/README.md) · [`archive/PATHS.json`](archive/PATHS.json) | Historical experiments and the complete old-to-new path map |
+| [`docs/BUILD_AND_RUN.md`](docs/BUILD_AND_RUN.md) | Dependency setup, one-sketch builds, upload and calibration |
+| [`docs/FIRMWARE_HISTORY.md`](docs/FIRMWARE_HISTORY.md) | Revision inventory, source evidence and preserved contribution credits |
+| [`docs/ENGINEERING_NOTES.md`](docs/ENGINEERING_NOTES.md) | Difficulties, implemented responses and unresolved behavior |
+| [`docs/VALIDATION.md`](docs/VALIDATION.md) · [`tests/`](tests/) | Recorded firmware builds, repository checks and physical verification still needed |
+
+All existing firmware and historical note content is retained. Source moves are mapped explicitly; old commits remain available in Git history. The archive is not a collection of alternative final releases.
 
 ## Team and individual contributions
 
@@ -129,11 +141,13 @@ The **39.37-second video duration is not a measured lap time**. There are no rec
 
 ## Known limitations and next improvements
 
-1. Recover the final firmware and associate it with a dated demonstration before declaring a final release.
-2. Verify the installed wiring, steering center, supply behavior and camera settings, then commit a reproducible hardware record.
-3. Address camera-failure, prolonged line-loss and obstacle-stop behavior in a separately tested firmware change. Existing behavior was preserved in this review.
-4. Measure straight/curve tracking, crossing repeatability, loop timing and final stopping distance under recorded conditions.
-5. Add annotated wiring photos and a measured test record tied to the demonstrated source. Encoder feedback and more robust lane tracking are possible later improvements, not current features.
+1. Identify the actual firmware running on the car and establish a measured baseline: complete laps, lap times, failed runs and exact source/configuration.
+2. Verify steering center and direction, camera setup and loaded power behavior on the assembled car; add annotated wiring, component specifications and CAD when available.
+3. Improve lap performance through recorded PD/filter and steering-dependent PWM trials. No optimal gains or measured fastest configuration have been established.
+4. Measure loop timing, lane-loss duration and crossing repeatability. Design camera-failure, prolonged line-loss and arming behavior as explicit, separately tested firmware changes.
+5. Revisit finish-marker and obstacle stopping after the lap-performance work. Encoder feedback and other larger control changes remain future options.
+
+The [roadmap](docs/ROADMAP.md) states the evidence needed to complete each item. Missing results and source files are not filled with guessed values.
 
 ## Credits and licensing
 

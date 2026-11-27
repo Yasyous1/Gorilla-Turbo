@@ -1,5 +1,7 @@
 # Hardware and wiring
 
+[Component inventory](../hardware/README.md) · [Architecture](ARCHITECTURE.md) · [Missing material and priorities](ROADMAP.md)
+
 This document separates connections defined by source code, hardware described in the team report and features visible in the supplied media. The physical car was not available for the November 2026 repository review. Match the selected firmware to the wiring before applying motor power.
 
 ## Hardware used by the project
@@ -11,7 +13,7 @@ This document separates connections defined by source code, hardware described i
 | Steering servo | Turns the front wheels | Signal pin 19 in the recent tracked variants. The report names MG945; earlier discussion mentions MG995. Check the label on the installed servo before treating either model as verified. |
 | L298N module | Drives two DC propulsion motors | Six-pin control interface in the latest motor variants: two PWM enables and four direction signals. |
 | Two DC motors | Propulsion | The report describes 12 V motors; exact motor model, gearing and wheel dimensions are not recorded. PWM is open-loop; no encoder feedback is implemented. |
-| HC-SR04 | Frontal distance measurement | Used by `TRY2.ino` and `day 2/main_day2.cpp`; described in the later car report. **Absent from the newest tracked firmware.** |
+| HC-SR04 | Frontal distance measurement | Used by `archive/firmware/TRY2.ino` and `archive/firmware/day 2/main_day2.cpp`; described in the later car report. **Absent from the newest tracked firmware.** |
 | LM2596 adjustable module | Regulated supply | The report records a 5 V supply for Teensy, Pixy and steering servo. Regulator board rating, wiring and loaded-voltage measurements are not available. |
 | Chassis, printed mounts and steering linkage | Mechanical support and wheel steering | The report credits PLA fabrication at the INSAT FabLab. The supplied photo shows magenta printed structures and clear chassis plates; their dimensions and materials are not independently verified. CAD/STL files are not in this repository. |
 
@@ -25,7 +27,7 @@ These views document the assembled layout. They do not resolve the installed ser
 
 ## Latest tracked firmware: code-defined connections
 
-Source: [`hell1/better_intersection`](../hell1/better_intersection), also shared by [`hell1/sketch_with_motors.cpp`](../hell1/sketch_with_motors.cpp).
+Source: [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino), also shared by [`archive/firmware/hell1/sketch_with_motors.cpp`](../archive/firmware/hell1/sketch_with_motors.cpp).
 
 | Teensy pin | Connection | Behavior in the latest firmware |
 | ---: | --- | --- |
@@ -60,7 +62,7 @@ These signal assignments are supported by [PJRC's Teensy 4.1 pinout](https://www
 
 ### Ultrasonic and jumper connections belong to earlier variants
 
-| Function | `TRY2.ino` / `day 2/main_day2.cpp` | Latest `hell1/better_intersection` |
+| Function | `archive/firmware/TRY2.ino` / `archive/firmware/day 2/main_day2.cpp` | Latest `firmware/track_following/track_following.ino` |
 | --- | --- | --- |
 | HC-SR04 TRIG | Pin 23 | Not configured or read |
 | HC-SR04 ECHO | Pin 22 | Not configured or read |
@@ -68,7 +70,7 @@ These signal assignments are supported by [PJRC's Teensy 4.1 pinout](https://www
 
 Pin 20 is not a dependable start or emergency-stop input in these versions: `TRY2` never reads it, and Day 2's initial speed selection is superseded by the normal speed calculation. The newest motor firmware starts driving automatically after initialization.
 
-The alternative [`nxp_cup_corrected.ino`](../nxp_cup_corrected.ino) uses PWM pins 3/4 and direction pins 5/6. It is a different motor interface and must not be uploaded as a drop-in replacement for the six-signal L298N wiring above.
+The alternative [`archive/firmware/nxp_cup_corrected.ino`](../archive/firmware/nxp_cup_corrected.ino) uses PWM pins 3/4 and direction pins 5/6. It is a different motor interface and must not be uploaded as a drop-in replacement for the six-signal L298N wiring above.
 
 ## Power arrangement and checks
 

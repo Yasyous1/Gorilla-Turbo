@@ -1,0 +1,114 @@
+{
+  "source_commit": "17a4c26395c94cd52ea3b73fd5196aea6f0ded3b",
+  "description": "Paths before repository organization. All mapped file contents are preserved byte-for-byte; hashes do not establish physical validation.",
+  "files": [
+    {
+      "previous_path": "TRY2.ino",
+      "current_path": "archive/firmware/TRY2.ino",
+      "sha256": "b13bed6c04a1f9660579e5dd05c1ad7c7a939817796548fa49e589744f2da5b2",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "better_intersection",
+      "current_path": "archive/firmware/better_intersection",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "code_cam_servo.ino",
+      "current_path": "archive/firmware/code_cam_servo.ino",
+      "sha256": "34d42331bb701e6d4242fd36489bdd50598c5161ce2890f760e6fd1d22cab5bc",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "code_cam_servov3.ino",
+      "current_path": "archive/firmware/code_cam_servov3.ino",
+      "sha256": "5593cdc24b85c0ecb5804672a7860e2dc60e58532c767f4586486e6ea369c012",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/Serial_Plotting.cpp",
+      "current_path": "archive/firmware/day 2/Serial_Plotting.cpp",
+      "sha256": "4bb269e74e88d58cf0000e98ad2f707dc1c117d4f8badd4599709df529e08815",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/Serial_Plotting.h",
+      "current_path": "archive/firmware/day 2/Serial_Plotting.h",
+      "sha256": "a86085e7fe24b71da457acaca19ddd5e4ea470e6a6cd4c891e56f2403d513a57",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/code_cam_servo.ino",
+      "current_path": "archive/firmware/day 2/code_cam_servo.ino",
+      "sha256": "34d42331bb701e6d4242fd36489bdd50598c5161ce2890f760e6fd1d22cab5bc",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/main_day2.cpp",
+      "current_path": "archive/firmware/day 2/main_day2.cpp",
+      "sha256": "830817e396e7fcc323c33953871e1b3463c74c76437961b04de935382ef192fe",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/read.md",
+      "current_path": "archive/firmware/day 2/read.md",
+      "sha256": "b5a9f9f3242abfe54d5bc3776a2d50ee7139a17cc5e5f10915ea917a76f7165d",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "day 2/servo_calibration.cpp",
+      "current_path": "firmware/calibration/servo_calibration/servo_calibration.ino",
+      "sha256": "14fbdd7a26bc3df546a357ff2c578eb686099798877e19f73acb9ef240e6435e",
+      "role": "calibration_utility"
+    },
+    {
+      "previous_path": "helemwthakek.ino",
+      "current_path": "archive/firmware/helemwthakek.ino",
+      "sha256": "dbec986fc9d03b9e7fda4e461ba9512f30cd06b476e16e80152c093c415cae1b",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "hell1/better_intersection",
+      "current_path": "firmware/track_following/track_following.ino",
+      "sha256": "1d49d792ee64992f6385352ac78828ab329dac12438dc0584875b8554ee7c21e",
+      "role": "current_reference"
+    },
+    {
+      "previous_path": "hell1/readme.md",
+      "current_path": "archive/firmware/hell1/readme.md",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "hell1/sketch_with_motors.cpp",
+      "current_path": "archive/firmware/hell1/sketch_with_motors.cpp",
+      "sha256": "96f3bd6f9c60192ec00d755d733dace6e08a38f2fca3ba4ecefd00373baa8938",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "meilleur-test-servo.ino",
+      "current_path": "archive/firmware/meilleur-test-servo.ino",
+      "sha256": "7378afe0436c2cc48447fb1a4ec0681cc7abddb70e1293ba06a75f215310edbd",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "nxp_cup_corrected.ino",
+      "current_path": "archive/firmware/nxp_cup_corrected.ino",
+      "sha256": "37394e60d14f62f761e25191244f114b718606eb0adc5c9253ca0969a49e245c",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "test erreur-servo/Read me.md",
+      "current_path": "archive/firmware/test erreur-servo/Read me.md",
+      "sha256": "898cd8b55c902be81c6a186759c3a6d52994052cbd9da17ea1414d70c5c4cc62",
+      "role": "historical_experiment_or_note"
+    },
+    {
+      "previous_path": "test erreur-servo/test-erreur_servo.ino",
+      "current_path": "archive/firmware/test erreur-servo/test-erreur_servo.ino",
+      "sha256": "7a5d86a398c571edfc573b9e9c692cbf1bfb52f2294e81eba659337e6c6e6f7a",
+      "role": "historical_experiment_or_note"
+    }
+  ]
+}
