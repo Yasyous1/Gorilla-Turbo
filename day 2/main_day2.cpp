@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <Pixy2.h>
-#include <Serial_Plotting.h>
+#include "Serial_Plotting.h"
 
 // ============================================================
 //  PIN DEFINITIONS
