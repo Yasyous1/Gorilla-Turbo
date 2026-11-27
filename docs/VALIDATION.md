@@ -4,7 +4,7 @@
 
 ## Scope
 
-Review date: **27 November 2026**. Original repository baseline: [`81d802210365757ba847fa165d7b237d982bb0b5`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5). Local work branch: **`docs/portfolio-review-2026-11-27`**.
+Review date: **27 November 2026**. Original repository baseline: [`81d802210365757ba847fa165d7b237d982bb0b5`](https://github.com/Yasyous1/Gorilla-Turbo/commit/81d802210365757ba847fa165d7b237d982bb0b5). Original review work branch: **`docs/portfolio-review-2026-11-27`**. The organized layout is now integrated into **`main`**.
 
 This document separates the earlier firmware/build review from the later repository reorganization. The earlier review used a fresh, initially clean clone and did not inspect uncommitted work on the owner's laptop. No existing local edits were overwritten and no project license was added or changed. The source moves and current repository checks are recorded separately below.
 
@@ -112,7 +112,7 @@ Suggested test record fields: date, tester, source commit/hash, board/camera/lib
 
 ## Available demonstrations and result evidence
 
-Youssef supplied a prototype photograph and track-demonstration video on **27 November 2026**, after the initial repository review. The original GitHub baseline had no media assets; the review branch now includes both files unchanged.
+Youssef supplied a prototype photograph and track-demonstration video on **27 November 2026**, after the initial repository review. The original GitHub baseline had no media assets; the repository now includes both files unchanged.
 
 | Asset | File information | Evidence |
 | --- | --- | --- |

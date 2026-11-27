@@ -74,12 +74,12 @@ Reference settings are **center 105°**, limits **40–150°**, `KP=0.65`, `KD=0
 
 ## Build and use
 
-The organized layout is published on **`docs/portfolio-review-2026-11-27`**; `main` is unchanged. The project retains **Arduino/Teensy**, using the PJRC board package and the Pixy2 Arduino library. `Servo`, `PWMServo` and `SPI` are supplied by the Teensy package. Python 3 is used only to prepare a standalone sketch on the development computer.
+The organized layout is available on the default **`main`** branch. The project retains **Arduino/Teensy**, using the PJRC board package and the Pixy2 Arduino library. `Servo`, `PWMServo` and `SPI` are supplied by the Teensy package. Python 3 is used only to prepare a standalone sketch on the development computer.
 
 The track-following sketch has its own Arduino directory. Historical sources remain separate programs under `archive/firmware/`; select exactly one revision with the preparation helper:
 
 ```bash
-git clone --branch docs/portfolio-review-2026-11-27 https://github.com/Yasyous1/Gorilla-Turbo.git
+git clone https://github.com/Yasyous1/Gorilla-Turbo.git
 cd Gorilla-Turbo
 python3 scripts/prepare_sketch.py --list
 python3 scripts/prepare_sketch.py intersection

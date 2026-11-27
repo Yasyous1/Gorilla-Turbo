@@ -2,7 +2,7 @@
 
 [Back to README](../README.md) · [Hardware](HARDWARE.md) · [Verification results](VALIDATION.md)
 
-Use the **`docs/portfolio-review-2026-11-27`** branch for this organized layout; `main` is unchanged. The repository uses Arduino C++ with PJRC's Teensy support. The development baseline is [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino); the calibration tool has its own sketch directory. Earlier experiments live under `archive/firmware/` and remain separate programs. The preparation scripts select one program and its companions without combining multiple `setup()` and `loop()` functions.
+Use the default **`main`** branch for this organized layout. The repository uses Arduino C++ with PJRC's Teensy support. The development baseline is [`firmware/track_following/track_following.ino`](../firmware/track_following/track_following.ino); the calibration tool has its own sketch directory. Earlier experiments live under `archive/firmware/` and remain separate programs. The preparation scripts select one program and its companions without combining multiple `setup()` and `loop()` functions.
 
 ## Previously verified tools and dependencies
 
